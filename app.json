@@ -1,25 +1,23 @@
 {
   "expo": {
-    "name": "aitss-app",
-    "slug": "aitss-app",
+    "name": "AITSS",
+    "slug": "aitss",
+    "scheme": "aitss",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
-      },
-      "predictiveBackGestureEnabled": false
-    },
+    "userInterfaceStyle": "automatic",
     "web": {
-      "favicon": "./assets/favicon.png"
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-asset",
+      "expo-font"
+    ],
+    "experiments": {
+      "tsconfigPaths": true,
+      "baseUrl": "/aitss-app"
     }
   }
 }

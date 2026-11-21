@@ -1,0 +1,88 @@
+import { api } from './client';
+import type {
+  AuthResponse,
+  CreateTaskBody,
+  GroupLessonsResponse,
+  LessonDetail,
+  ReviseLessonBody,
+  ReviseLessonResponse,
+  TeacherTask,
+  UpdateLessonBody,
+  UpdateTaskBody,
+  CalendarResponse,
+  Consultation,
+  ScheduleConsultationBody,
+  ChangePasswordBody,
+  GradeBody,
+  GradeResponse,
+  GroupDetail,
+  HomeworkListResponse,
+  JoinGroupBody,
+  KnowledgeGraphResponse,
+  LoginBody,
+  OfflineBundle,
+  OfflineSyncBody,
+  OfflineSyncResponse,
+  PatchGroupBody,
+  ProfileResponse,
+  ProvidersConfig,
+  ProviderKey,
+  QuizGenerateBody,
+  QuizGenerateResponse,
+  RegisterBody,
+  StudentDashboard,
+  SubjectsResponse,
+  TeacherDashboard,
+  TutorChatBody,
+  TutorChatResponse,
+  TutorEscalateBody,
+  TutorEscalateResponse,
+  TutorSessionBody,
+  TutorSessionResponse,
+  UpdateProfileBody,
+} from './types';
+
+/** Flask module: /api/v1/lms/* */
+export const lmsApi = {
+  register: (body: RegisterBody) => api<AuthResponse>('POST', '/lms/auth/register', body),
+  login: (body: LoginBody) => api<AuthResponse>('POST', '/lms/auth/login', body),
+
+  profile: () => api<ProfileResponse>('GET', '/lms/profile'),
+  updateProfile: (body: UpdateProfileBody) => api<ProfileResponse>('PATCH', '/lms/profile', body),
+  changePassword: (body: ChangePasswordBody) => api<void>('POST', '/lms/profile/password', body),
+  joinGroup: (body: JoinGroupBody) => api<ProfileResponse>('POST', '/lms/groups/join', body),
+
+  studentDashboard: () => api<StudentDashboard>('GET', '/lms/student/dashboard'),
+  knowledgeGraph: () => api<KnowledgeGraphResponse>('GET', '/lms/student/knowledge-graph'),
+  subjects: () => api<SubjectsResponse>('GET', '/lms/subjects'),
+  homework: () => api<HomeworkListResponse>('GET', '/lms/student/homework'),
+
+  offlineBundle: (topicId: number) => api<OfflineBundle>('GET', `/lms/topics/${topicId}/offline-bundle`),
+  offlineSync: (body: OfflineSyncBody) => api<OfflineSyncResponse>('POST', '/lms/offline/sync', body),
+
+  teacherDashboard: () => api<TeacherDashboard>('GET', '/lms/teacher/dashboard'),
+  teacherGroup: (id: number) => api<GroupDetail>('GET', `/lms/teacher/groups/${id}`),
+  patchGroup: (id: number, body: PatchGroupBody) => api<GroupDetail>('PATCH', `/lms/teacher/groups/${id}`, body),
+  scheduleConsultation: (escalationId: number, body: ScheduleConsultationBody) =>
+    api<Consultation>('POST', `/lms/teacher/escalations/${escalationId}/schedule`, body),
+  cancelConsultation: (id: number) => api<void>('DELETE', `/lms/teacher/consultations/${id}`),
+  teacherCalendar: (month: string) => api<CalendarResponse>('GET', `/lms/teacher/calendar?month=${month}`),
+  groupLessons: (groupId: number) => api<GroupLessonsResponse>('GET', `/lms/teacher/groups/${groupId}/lessons`),
+  lesson: (topicId: number) => api<LessonDetail>('GET', `/lms/teacher/lessons/${topicId}`),
+  updateLesson: (topicId: number, body: UpdateLessonBody) => api<LessonDetail>('PATCH', `/lms/teacher/lessons/${topicId}`, body),
+  createTask: (topicId: number, body: CreateTaskBody) => api<LessonDetail>('POST', `/lms/teacher/lessons/${topicId}/tasks`, body),
+  updateTask: (taskId: number, body: UpdateTaskBody) => api<TeacherTask>('PATCH', `/lms/teacher/tasks/${taskId}`, body),
+  resolveEscalation: (id: number) => api<void>('POST', `/lms/teacher/escalations/${id}/resolve`),
+};
+
+/** FastAPI module: /api/v1/ai/* */
+export const aiApi = {
+  tutorSession: (body: TutorSessionBody) => api<TutorSessionResponse>('POST', '/ai/tutor/session', body),
+  tutorChat: (body: TutorChatBody) => api<TutorChatResponse>('POST', '/ai/tutor/chat', body),
+  tutorEscalate: (body: TutorEscalateBody) => api<TutorEscalateResponse>('POST', '/ai/tutor/escalate', body),
+  gradeHomework: (body: GradeBody) => api<GradeResponse>('POST', '/ai/homework/grade', body),
+  generateQuiz: (body: QuizGenerateBody) => api<QuizGenerateResponse>('POST', '/ai/quiz/generate', body),
+  reviseLesson: (body: ReviseLessonBody) => api<ReviseLessonResponse>('POST', '/ai/lessons/revise', body),
+  providers: () => api<ProvidersConfig>('GET', '/ai/providers/config'),
+  setProvider: (active: ProviderKey) => api<ProvidersConfig>('POST', '/ai/providers/config', { active }),
+};
